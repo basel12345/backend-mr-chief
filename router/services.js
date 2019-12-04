@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const Joi = require("joi")
 const Services = require("../model/services");
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 
 router.get("/getAllServices", async (req, res) => {
@@ -24,7 +26,7 @@ router.get("/getOneService/:id", async (req, res) => {
 })
 
 
-router.post("/addServices", async (req, res) => {
+router.post("/addServices", [auth, admin], async (req, res) => {
 	try {
 		const schema = {
 			product: Joi.string().min(0).required(),
@@ -35,7 +37,10 @@ router.post("/addServices", async (req, res) => {
 
 		const result = Joi.validate(req.body, schema);
 		if (result.error) {
-			return res.status(400).send(result.error.details[0].message);
+			return res.send({
+				status: false,
+				message: "Falid to save the drink"
+			});
 		}
 
 		const newServices = await new Services({

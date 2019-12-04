@@ -37,7 +37,10 @@ router.post("/addDrinks", [auth, admin], async (req, res) => {
 		const result = Joi.validate(req.body, schema);
 
 		if (result.error) {
-			return res.status(400).send(result.error.details[0].message)
+			return res.send({
+				status: false,
+				message: result.error.details[0].message
+			})
 		}
 		const newDrinks = await new Drinks({
 			product: req.body.product,
@@ -47,7 +50,7 @@ router.post("/addDrinks", [auth, admin], async (req, res) => {
 		});
 		await newDrinks.save((err, drink) => {
 			if (err) {
-				res.send({
+				return res.send({
 					status: false,
 					message: "Falid to save the drink"
 				});

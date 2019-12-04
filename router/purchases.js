@@ -17,7 +17,7 @@ router.get("/getAllPurchases", async (req, res) => {
 router.post("/addPurchase", async (req, res) => {
 	try {
 		const schema = {
-			data: Joi.date().required(),
+			date: Joi.date().required(),
 			value: Joi.number().required(),
 			Ingredients: Joi.string().min(3).required(),
 		}
@@ -25,10 +25,13 @@ router.post("/addPurchase", async (req, res) => {
 		const result = Joi.validate(req.body, schema);
 
 		if(result.error) {
-			return res.status(400).send(result.error.details[0].message);
+			return res.send({
+				status: false,
+				message: result.error.details[0].message
+			})
 		}
 		const purchases = await new Purchases({
-			date: req.body.data,
+			date: req.body.date,
 			value: req.body.value,
 			Ingredients: req.body.Ingredients
 		});
@@ -36,12 +39,12 @@ router.post("/addPurchase", async (req, res) => {
 		await purchases.save((err, purchases) => {
 			if (err) {
 				res.send({
-					sccess: false,
+					status: false,
 					message: "Falid to save the purchases"
 				})
 			};
 			return res.send({
-				sccess: true,
+				status: true,
 				message: "Purchases saved",
 				purchases
 			});

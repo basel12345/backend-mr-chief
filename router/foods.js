@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const Joi = require("joi");
 const Food = require('../model/foods')
+const auth = require("../middleware/auth");
+const admin = require("../middleware/admin");
 
 
 router.get('/getAllFoods', async (req, res) => {
@@ -24,7 +26,7 @@ router.get('/getOneFood/:id', async (req, res) => {
 	};
 });
 
-router.post('/addFood', async (req, res) => {
+router.post('/addFood',[auth,admin], async (req, res) => {
 	const schema = {
 		product: Joi.string().min(0).required(),
 		cost: Joi.number().required(),
@@ -34,7 +36,10 @@ router.post('/addFood', async (req, res) => {
 
 	const result = Joi.validate(req.body, schema);
 	if (result.error) {
-		return res.status(400).send(result.error.details[0].message);
+		return res.send({
+			status: false,
+			message: "Falid to save the drink"
+		});
 	}
 
 
@@ -49,12 +54,12 @@ router.post('/addFood', async (req, res) => {
 		await newFood.save((err, food) => {
 			if (err) {
 				return res.send({
-					sccess: false,
+					status: false,
 					message: "Falid to save the food"
 				})
 			};
 			return res.send({
-				sccess: true,
+				status: true,
 				message: "Food saved",
 				food
 			});
