@@ -57,7 +57,7 @@ app.get('/', (req, res, next) => {
 
 
 
-const PORT = process.env.port || 8000;
+const PORT = process.env.port || 3000;
 app.listen(PORT, () => {
 	console.log(`server listen on port ${PORT}`);
 })

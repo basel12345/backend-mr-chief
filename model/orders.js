@@ -2,12 +2,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const OrderSchema = new Schema({
-	name: [{
-		order: {
-			type: String,
-			required: true
-		}
-	}],
+
+	order: {
+		type: Array,
+		required: true
+	},
 	discoount: {
 		type: Number,
 		required: true
@@ -18,6 +17,18 @@ const OrderSchema = new Schema({
 	},
 	residual: {
 		type: Number,
+		required: true
+	},
+	createdAt: {
+		type: Date,
+		default: new Date().getTime()
+	},
+	billNumber: {
+		type: Number,
+		required: true
+	},
+	name: {
+		type: String,
 		required: true
 	},
 	table_id: {
