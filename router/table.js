@@ -13,6 +13,16 @@ router.get("/getAllTable", async (req, res) => {
 	}
 });
 
+router.get("/getOneTable/:id", async (req, res) => {
+	try {
+		const table = await Table.findById(req.params.id).populate("order");
+		if (!table) return res.status(404).send(`Not find this table`);
+		return res.send(table)
+	} catch (err) {
+		res.status(500).send(err.message);
+	}
+});
+
 
 router.post("/addTable", async (req, res) => {
 	try {
@@ -44,7 +54,15 @@ router.post("/addTable", async (req, res) => {
 		})
 	} catch (err) {
 		res.status(500).send(err.messsage);
-	}
+	};
+});
+
+router.put("/updateStatusTable/:id", async(req,res) => {
+	const table = await Table.findByIdAndUpdate(req.params.id, {
+		status: req.body.status
+	}, { new: true });
+
+	await table.save();
 })
 
 module.exports = router;

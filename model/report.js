@@ -1,8 +1,8 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
-const OrderSchema = new Schema({
 
+const ReportSchema = new Schema({
 	order: {
 		type: Array,
 		required: true
@@ -49,6 +49,6 @@ const OrderSchema = new Schema({
 	}
 });
 
-const Order = mongoose.model("Order", OrderSchema);
+const Report = mongoose.model("Report",ReportSchema);
 
-module.exports = Order; 
+module.exports = Report;
